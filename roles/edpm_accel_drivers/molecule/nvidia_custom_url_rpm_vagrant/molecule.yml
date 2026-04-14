@@ -21,9 +21,9 @@ platforms:
 provisioner:
   name: ansible
   playbooks:
-    converge: ../custom_url_rpm/converge.yml
-    prepare: ../custom_url_rpm/prepare.yml
-    verify: ../custom_url_rpm/verify.yml
+    converge: ../nvidia_custom_url_rpm/converge.yml
+    prepare: ../nvidia_custom_url_rpm/prepare.yml
+    verify: ../nvidia_custom_url_rpm/verify.yml
 verifier:
   name: ansible
 scenario:

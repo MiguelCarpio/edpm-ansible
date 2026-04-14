@@ -6,7 +6,7 @@
     msg: >
       Installing NVIDIA drivers from a .run file is UNSUPPORTED and may result in unexpected behavior.
 
-- ansible.builtin.import_tasks: nvidia_kernel_version.yml  # noqa: name[missing]
+- ansible.builtin.import_tasks: kernel_version.yml  # noqa: name[missing]
 
 - name: Install dependencies for .run driver installation (UNSUPPORTED)
   become: true
@@ -17,10 +17,10 @@
       - "kernel-headers-{{ _edpm_accel_drivers_kernel_version }}"
       - "kernel-devel-{{ _edpm_accel_drivers_kernel_version }}"
     state: present
-  register: _install_packages_result
-  until: _install_packages_result is succeeded
-  retries: "{{ edpm_accel_drivers_download_retries }}"
-  delay: "{{ edpm_accel_drivers_download_delay }}"
+  register: _edpm_accel_drivers_install_packages_result
+  until: _edpm_accel_drivers_install_packages_result is succeeded
+  retries: "{{ _edpm_accel_drivers_config.download.retries }}"
+  delay: "{{ _edpm_accel_drivers_config.download.delay }}"
 
 - name: Execute .run file (UNSUPPORTED)
   become: true

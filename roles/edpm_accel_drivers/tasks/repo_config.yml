@@ -1,0 +1,47 @@
+---
+
+- name: Add {{ vendor_name }} driver repository
+  become: true
+  ansible.builtin.yum_repository:
+    name: "{{ vendor_name }}-rhel"
+    description: "{{ vendor_name }} drivers for rhel"
+    baseurl: "{{ _edpm_accel_drivers_config.vendors[vendor_name].repo.url }}/$basearch/"
+    gpgcheck: true
+    gpgkey: "{{ _edpm_accel_drivers_config.vendors[vendor_name].repo.gpgkey }}"
+
+# NOTE: DKMS is not supported, but it enables dnf repo testing w/ CS9 nodes
+- name: Assert DKMS module streams are not allowed on RHEL systems
+  ansible.builtin.assert:
+    that:
+      - not (
+          (ansible_facts['distribution'] | lower == 'redhat')
+          and
+          ('dkms' in _edpm_accel_drivers_config.vendors[vendor_name].repo.module_stream | lower)
+        )
+    fail_msg: >
+      DKMS-based driver module streams are not supported on RHEL.
+      Please set '_edpm_accel_drivers_config.vendors.{{ vendor_name }}.repo.module_stream' to a non-DKMS value for RHEL systems.
+
+- name: Add EPEL repository if using a DKMS stream (UNSUPPORTED)
+  when: "'dkms' in _edpm_accel_drivers_config.vendors[vendor_name].repo.module_stream | lower"
+  block:
+    - name: Print debug message for unsupported DKMS installation
+      ansible.builtin.debug:
+        msg: >
+          Installing {{ vendor_name }} drivers from a DKMS module stream is UNSUPPORTED and may result in unexpected behavior.
+    - name: Add EPEL repository (UNSUPPORTED)
+      become: true
+      ansible.builtin.yum_repository:
+        name: epel
+        description: EPEL YUM repo
+        baseurl: "https://download.fedoraproject.org/pub/epel/{{ ansible_facts['distribution_major_version'] }}/Everything/$basearch/"
+        enabled: 1
+        gpgcheck: 1
+        gpgkey: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-{{ ansible_facts['distribution_major_version'] }}"
+
+- name: Enable DNF module for selected version stream
+  when: _edpm_accel_drivers_config.vendors[vendor_name].repo.module_stream | default('') != ""
+  become: true
+  ansible.builtin.dnf:
+    name: "@{{ _edpm_accel_drivers_config.vendors[vendor_name].repo.module_name }}:{{ _edpm_accel_drivers_config.vendors[vendor_name].repo.module_stream }}"
+    state: present
