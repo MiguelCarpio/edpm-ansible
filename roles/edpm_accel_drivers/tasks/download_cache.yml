@@ -7,7 +7,9 @@
   loop: "{{ _edpm_accel_drivers_enabled_vendors }}"
   loop_control:
     loop_var: vendor_name
-  when: _edpm_accel_drivers_config.vendors[vendor_name].repo.url | default('') != ""
+  when:
+    - _edpm_accel_drivers_config.vendors[vendor_name].repo is defined
+    - _edpm_accel_drivers_config.vendors[vendor_name].repo.url | default('') != ""
   block:
     - name: Import repository setup tasks
       ansible.builtin.import_tasks: repo_config.yml
@@ -26,7 +28,9 @@
   loop: "{{ _edpm_accel_drivers_enabled_vendors }}"
   loop_control:
     loop_var: vendor_name
-  when: _edpm_accel_drivers_config.vendors[vendor_name].custom_url.url | default('') != ""
+  when:
+    - _edpm_accel_drivers_config.vendors[vendor_name].custom_url is defined
+    - _edpm_accel_drivers_config.vendors[vendor_name].custom_url.url | default('') != ""
   block:
     - name: Set internal variables for custom URL download
       ansible.builtin.set_fact:
