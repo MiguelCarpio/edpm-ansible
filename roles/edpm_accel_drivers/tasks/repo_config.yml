@@ -1,6 +1,6 @@
 ---
 
-- name: Add {{ vendor_name }} driver repository
+- name: Add driver repository for {{ vendor_name }}
   become: true
   ansible.builtin.yum_repository:
     name: "{{ vendor_name }}-rhel"

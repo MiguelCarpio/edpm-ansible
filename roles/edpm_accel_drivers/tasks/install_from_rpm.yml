@@ -1,6 +1,6 @@
 ---
 
-- name: Install {{ vendor_name }} driver package
+- name: Install driver package for {{ vendor_name }}
   become: true
   ansible.builtin.dnf:
     name: "{{ _edpm_accel_drivers_package }}"

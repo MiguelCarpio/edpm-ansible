@@ -12,7 +12,7 @@
     - name: Import repository setup tasks
       ansible.builtin.import_tasks: repo_config.yml
 
-    - name: Download {{ vendor_name }} driver package
+    - name: Download driver package for {{ vendor_name }}
       ansible.builtin.dnf:
         name: "{{ _edpm_accel_drivers_config.vendors[vendor_name].repo.package_name }}"
         download_only: true

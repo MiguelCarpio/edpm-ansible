@@ -11,4 +11,7 @@
 
 - name: Build list of enabled vendors
   ansible.builtin.set_fact:
-    _edpm_accel_drivers_enabled_vendors: "{{ _edpm_accel_drivers_config.vendors | dict2items | selectattr('value.enabled', 'equalto', true) | map(attribute='key') | list }}"
+    _edpm_accel_drivers_enabled_vendors: >-
+      {{ _edpm_accel_drivers_config.vendors | dict2items |
+         selectattr('value.enabled', 'equalto', true) |
+         map(attribute='key') | list }}

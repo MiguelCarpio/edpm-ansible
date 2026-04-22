@@ -6,7 +6,7 @@
   loop_control:
     loop_var: module_name
 
-- name: Install {{ vendor_name }} driver from repository
+- name: Install driver from repository for {{ vendor_name }}
   when: _edpm_accel_drivers_config.vendors[vendor_name].repo.url | default('') != ''
   block:
     - name: Set internal variables for repository installation
@@ -20,7 +20,7 @@
     - name: Install driver package from repository
       ansible.builtin.import_tasks: install_from_rpm.yml
 
-- name: Install {{ vendor_name }} driver from custom URL
+- name: Install driver from custom URL for {{ vendor_name }}
   when: _edpm_accel_drivers_config.vendors[vendor_name].custom_url.url | default('') != ''
   block:
     - name: Set internal variables for custom URL installation
