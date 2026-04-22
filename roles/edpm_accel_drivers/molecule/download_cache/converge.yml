@@ -1,0 +1,25 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: Test download_cache.yml entry point
+      ansible.builtin.include_role:
+        name: "edpm_accel_drivers"
+        tasks_from: download_cache.yml
+      vars:
+        edpm_accel_drivers:
+          cache:
+            path: /var/cache/accel-drivers
+          vendors:
+            nvidia_gpu:
+              enabled: true
+              repo:
+                url: "https://developer.download.nvidia.com/compute/cuda/repos/rhel9/"
+                gpgkey: "https://developer.download.nvidia.com/compute/cuda/repos/rhel9/$basearch/D42D0685.pub"
+                module_stream: "open-dkms"
+                package_name: "nvidia-open"
+            amd_gpu:
+              enabled: true
+              custom_url:
+                url: "file:///tmp/mock-amd-driver.rpm"
+                disable_gpg_check: true
