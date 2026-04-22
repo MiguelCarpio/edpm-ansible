@@ -42,4 +42,6 @@
 
     - name: Install NVIDIA driver from .run file (UNSUPPORTED)
       ansible.builtin.import_tasks: nvidia_from_run.yml
-      when: _edpm_accel_drivers_is_run_file | bool
+      when:
+        - _edpm_accel_drivers_is_run_file | bool
+        - vendor_name == 'nvidia_gpu'

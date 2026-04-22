@@ -32,7 +32,9 @@
       ansible.builtin.import_tasks: download_from_custom_url.yml
 
     - name: Download requirements for .run driver installation (UNSUPPORTED)
-      when: _edpm_accel_drivers_is_run_file | bool
+      when:
+        - _edpm_accel_drivers_is_run_file | bool
+        - vendor_name == 'nvidia_gpu'
       block:
         - ansible.builtin.import_tasks: kernel_version.yml  # noqa: name[missing]
 
